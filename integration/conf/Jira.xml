@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--$Id$-->
+<!--
+    Document   : Jira.xml
+    Description:
+	The details of the action such as the http url to be accessed,username,
+	password,the request params that need to be passed to the Jira, the response
+        that needs to be recorded in SDP etc... will be specified
+        in this xml. This file should be present in the
+        [SDP Home]/server/default/conf directory.
+-->
+
+<!--
+menus is the root element which will contain the configurations of all the
+menus for Jira related integration
+-->
+
+<menus>
+   <!--
+    The menu element defines the configurations for each individual menu.Each
+    menu configured under (Admin -> Request Menu Action ) should have a corresponding
+    entry in this xml with same menu name.
+    -->	
+        <menu name="Create_JIRA_UI_Ticket">
+		<request>
+			<!--
+			Each URL can be accessed only after authentication. So the 
+			username and the password to use should be specified using
+			the <username> and the <password> elements. The url that
+			needs to be invoked on clicking the menu should be specified
+			using the <url> element
+			-->
+                        <username>[Jira_Username]</username>
+                        <!--Example, <username>administrator</username>  -->
+                        
+			<password>[Jira_Password]</password>
+                        <!--Example, <password>administrator</password>  -->
+                        
+                        <url>[Jira_server]:[Port_Number]/rest/api/2/issue/</url>
+			<!--Example, <url>http://JiraServer:8888/rest/api/2/issue/</url> --> 
+                        
+                        <html_fields>
+                            <!--field>
+                                <name>Project Type</name>
+                                <type>select</type>        
+                                <value>projectID</value>                
+                                <mandatory>true</mandatory>       
+                            </field-->
+                        </html_fields>
+            <!--
+                    mapping_fields indicates the list of fields that need to be mapped between SDP and ADMP in the HTML Page. The field element has two child nodes.
+                    
+                    <name>  :Indicate the name of the Jira property name. This is nothing but the ID of your html element. As mentioned above in html_fields, this should be the field value of your html_fields. 
+
+                    <value> : Indicates the SDP Property Name.
+                    <type>  : Indicates type of field, than can be used to change representation of a field value if needed .
+                    
+                    Javascript variable "sdpJson" will be preloaded in your HTML Page. We will use the same to populate the default values in the HTML Page.
+                    
+            -->
+                        <mapping_fields>
+                            <field>
+                                <name>Summary</name>
+                                <value>SUBJECT</value>
+                                <type>TEXT</type>
+                            </field>
+                            <field>
+                                <name>Description</name>
+                                <value>SHORTDESCRIPTION</value>
+                                <type>TEXTAREA</type>
+                            </field>
+                            <field>
+                                <name>Due Date</name>
+                                <value>DUEBYTIME</value>
+                                <type>DATE</type>
+                            </field>
+                        </mapping_fields>
+                </request>
+        </menu>
+	<menu name="Create_JIRA_Ticket">
+		<request>
+			<!--
+			Each URL can be accessed only after authentication. So the 
+			username and the password to use should be specified using
+			the <username> and the <password> elements. The url that
+			needs to be invoked on clicking the menu should be specified
+			using the <url> element
+			-->
+                        <username>[Jira_Username]</username>
+                        <!--Example, <username>administrator</username>  -->
+                        
+			<password>[Jira_Password]</password>
+                        <!--Example, <password>administrator</password>  -->
+                        
+                        <url>[Jira_server]:[Port_Number]/rest/api/2/issue/</url>
+			<!--Example, <url>http://JiraServer:8888/rest/api/2/issue/</url> --> 
+                        
+			<!--
+				param indicates the list of params that need to be passed to the
+				URL during invocation. The param element has three child nodes.
+				<name>  : Indicates the name of the parameter that should be sent in the URL
+				<type>  : Indicates which type of field it is in jira so that the JSON 
+					  construction can be done accordingly.
+				<value> : Indicates the value that needs to be passed for the parameter
+		  			  represented by the name element.This value can be of two types.
+		  			  One is Static where the value specified would be passed
+		  			  directly. The other is dynamic and should be specified by the
+		  			  "$" symbol followed by the key. The key can be any of the
+		  			  request details that is available. For example, if the subject
+		  			  needs to be passed, then the value would be $SUBJECT.
+			-->
+			<!-- 
+			     Below are some of the mandatory fields in JIRA. Given values are sample values
+			     used for testing in our environment. Customers need to change it for their
+			     environment.
+			-->
+			<param>
+				<name>project</name>
+				<type>projectpicker</type>
+				<value>SDP</value>
+			</param>
+			<param >
+				<name>issuetype</name>
+				<type>select</type>
+				<value>Bug</value>
+			</param>
+			<param>
+				<name>summary</name> 
+				<type>textfield</type>
+				<value>$SUBJECT</value>
+			</param>
+			<param>
+				<name>priority</name>
+				<type>select</type>
+				<value>$PRIORITY</value>
+			</param>
+                        <!--
+                           To add Request URL as Additional Field in Jira, make the type of additional field as "requestURL" and value as "$WORKORDERID"
+                         -->
+                        <param>
+                                <name>customfield_10003</name>
+                                <type>requestURL</type>
+                                <value>$WORKORDERID</value>
+                        </param>
+
+			<!-- Mandatory Fields -->
+
+			<param>
+				<name>description</name>
+				<type>textarea</type>
+				<value>$SHORTDESCRIPTION</value>
+			</param>
+			<param>
+				<name>duedate</name>
+				<type>datepicker</type>
+				<value>$DUEBYTIME</value>
+			</param>
+			<!--
+			     Example to specify custom fields of JIRA.
+			-->
+			<param>
+				<name>customfield_10100</name>
+				<type>select</type>
+				<value>$Mapped_SDP_Field_Value</value>
+			</param>			
+		</request>
+		<success>Ticket created in jira with key $key  And with Id: $id</success>
+		<failure>Failed to Integrate to jira</failure>
+			<!--
+        		param indicates the list of params that need to be updated in
+        		SDP after the response from the URL is received. The param
+        		element has two child nodes.
+        		<name>  : Indicates the name of the parameter that needs to be updated
+        		<value> : Indicates the value that needs to be passed for the parameter
+                  		  represented by the name element.This value can be of two types.
+                  		  One is Static where the value specified would be passed
+                  		  directly. The other is dynamic and should be specified by the
+                  		  "$" symbol followed by the key. The key can be any of the
+                  		  element name that is available in the jsonobject returned by Jira.
+				  For example,the return jsonobject from jira is as follows:
+				  {
+					"id":"11300",
+					"key":"SDP-73",
+					"self":"http://JiraServerName:port/rest/api/2/issue/11300"
+				  }
+			-->
+		<response>
+			<param>
+				<name>JIRA_ISSUE_ID</name>
+				<value>$id</value>
+			</param>
+			<param>
+				<name>JIRA_ISSUE_KEY</name>
+				<value>$key</value>
+			</param>
+			<!--
+			     If notes need to be added after the menu invocation, specify the message 
+			     here. Only in case of success, the note will be added.
+			-->
+			<notes>
+				<note>Ticket is created in jira with key : $key  And with Id: $id</note>
+			</notes>
+		</response>
+	</menu>
+<!-- Update SDP fields with JIRA values-->
+ <menu name="Updating_JIRA_Information">
+
+                <request>
+
+                    <username>[Jira_Username]</username>
+                    <!--Example, <username>administrator</username>  -->
+
+                    <password>[Jira_Password]</password>
+                    <!--Example, <password>administrator</password>  -->
+
+                    <url>[Jira_server]:[Port_Number]/rest/api/2/issue/</url>
+                    <!--Example, <url>http://JiraServer:8888/rest/api/2/issue/</url> --> 
+                    
+                </request>
+
+                <success>Jira Results Fetched Successfully</success>
+                <failure>Failed to Fetch Jira Results</failure>
+
+                <response>
+                        <!-- JIRA_ISSUE_ID - SDP Additional Field , $id - JIRA Field-->
+                        <param>
+                                <name>JIRA_ISSUE_ID</name>
+                                <value>$id</value>
+                        </param>
+                        <param>
+                                <name>JIRA_ISSUE_URL</name>
+                                <value>$self</value>
+                        </param>
+                        <param>
+                                <name>JIRA_PROJECTNAME</name>
+                                <value>$fields,$project,$name</value>
+                        </param>
+                        <param>
+                                <name>JIRA_ISSUE_TYPE</name>
+                                <value>$fields,$issuetype,$name</value>
+                        </param>
+                        <param>
+                                <name>JIRA_ISSUE_STATUS</name>
+                                <value>$fields,$status,$name</value>
+                        </param>
+                        <param>
+                                <name>JIRA_ISSUE_RESOLUTION</name>
+                                <value>$fields,$resolution,$description</value>
+                        </param>
+                </response>
+        </menu>
+
+</menus>
+

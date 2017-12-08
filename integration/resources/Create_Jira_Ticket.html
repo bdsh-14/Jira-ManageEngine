@@ -1,0 +1,73 @@
+<html>
+<head>
+    <link href='/integration/resources/css/Create_Jira_Ticket.css' rel='stylesheet' type='text/css' >
+    <style>
+        .fieldInfo{margin-bottom: 10px;line-height: 0px;color:#0A0A;font-size: smaller;}
+        .errorInfo{margin-bottom: 10px;line-height: 10px;color:#F00;font-size: smaller;}
+        .adRdiv_noMargin{display:table; width:100%; margin:0px 0px 0px 0px; position:relative;}
+        .hidden {display: none;}
+    </style>
+    <script src="/scripts/jquery-1.8.3.min.js"></script>
+    <script src="/scripts/json2.js"></script>
+    <script src="/integration/resources/scripts/Create_Jira_Ticket.js"></script>
+</head>
+<body>
+    <div class="adMdiv">
+        <div class="tbhdr">Add Ticket In Jira</div>
+        <div class="lodMsg" style="display: none;"><div class="success"><span id="resp_msg"></span></div></div>
+        <div class="adRdiv_noMargin grbox">
+            <div class="adRdiv_noMargin">
+                <div class="adLdiv" style="width:15%;"><span>Project</span><span class="mandatory"> *</span></div>
+                <div class="adFdiv" style="width:30%;" >
+                    <select id="projectID" name="projectID" class='formStyle' style="width:90%">
+                        <option value="-1">--- Select Project ---</option>
+                    </select>
+                </div>
+            </div>
+            <div class="adRdiv_noMargin hidden">
+                <div class="adLdiv" style="width:15%;"><span>Issue Type</span><span class="mandatory"> *</span></div>
+                <div class="adFdiv" style="width:30%;" >
+                    <select id="issueID" name="issueID" class='formStyle' style="width:90%">
+                        <option value="-1">--- Select Issue Type ---</option>
+                    </select>
+                </div>
+            </div>
+            <div id="columnfields-2" class="adRdiv_noMargin" ></div>
+            <div id="columnfields-3" class="adRdiv_noMargin"></div>
+            <div id="columnfields-1" class="adRdiv_noMargin"></div>
+        </div>
+        <div style="display: none;" >
+            <div  id="row_div" class="adRdiv_noMargin">
+            </div>
+            <div id="inputDiv">
+                <div  class="adLdiv" style="width:15%;"><span></span></div>
+                <div class="adFdiv" style="width:30%;" >
+                    <input type='text'   class='formStyle' style='width:50%' />
+                </div>
+            </div>
+            <div id="selectDiv">
+                <div  class="adLdiv" style="width:15%;"><span></span></div>
+                <div class="adFdiv" style="width:30%;" >
+                    <select class='formStyle' style="width:50%">
+                            <option value="-1">--- Select ---</option>
+                    </select>
+                </div>
+            </div>
+            <div id="textAreaDiv">
+                <div  class="adLdiv" style="width:15%;"><span></span></div>
+                <div class="adFdiv" style="width:30%;" >
+                    <textarea  class='formStyle' style='width:50%;max-width:90%' ></textarea>
+                </div>
+            </div>
+            <span class="mandatory" id="mandatory"> *</span>
+            <div id="errorDiv"  class="errorInfo">This field is mandatory</div>
+            <div id="infoDiv"  class="fieldInfo"></div>
+        </div>
+        <div><img src="images/spacer.gif" height="30" border="0" /></div>
+        <div class="FormSubmitBG" align="center">
+            <input type="button" name="create" id="createTicket" value="Create Ticket" class="formBtnActive" onClick="createJiraTicket();"/>
+            <input type="button" name="Cancel" value="Cancel" class="formBtn" onClick="window.close();" />
+        </div>
+    </div>
+</body>
+</html>
